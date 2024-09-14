@@ -32,6 +32,7 @@ export async function addShelf(payload: z.infer<typeof schema>) {
   const res2 = await notionClient.databases.create({
     parent: { page_id: page.id },
     title: [{ type: 'text', text: { content: title } }],
+    icon: { type: 'emoji', emoji: '📚' },
     properties: DB_SCHEMA,
   })
 

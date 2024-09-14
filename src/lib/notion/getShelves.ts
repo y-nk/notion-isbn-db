@@ -14,8 +14,11 @@ export async function getShelves() {
 
   const databases = res.results as DatabaseObjectResponse[]
 
-  return databases.map((db) => ({
-    id: db.id,
-    title: db.title[0].plain_text,
-  }))
+  return databases
+    .filter(db => !db.archived && !db.in_trash && db.icon)
+    .filter(db => db.icon!.type === 'emoji' && db.icon!.emoji === '📚')
+    .map((db) => ({
+      id: db.id,
+      title: db.title[0]?.plain_text,
+    }))
 }

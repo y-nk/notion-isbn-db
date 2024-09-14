@@ -11,16 +11,17 @@ export default async function middleware(req: NextRequest) {
   if (!code) {
     return NextResponse.redirect(getOauthUrl())
   } else {
-    const token = await getAccessToken(code)
+    try {
+      const res = NextResponse.next()
+      res.cookies.set('token', await getAccessToken(code))
 
-    if (!token) {
-      return NextResponse.error()
+      return res
+    } catch (err) {
+      return new Response(`${err}`, {
+        status: 400,
+        statusText: `${err}`,
+      })
     }
-
-    const res = NextResponse.next()
-    res.cookies.set('token', token)
-
-    return res
   }
 }
 
