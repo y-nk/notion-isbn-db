@@ -14,7 +14,7 @@ export default async function middleware(req: NextRequest) {
     const token = await getAccessToken(code)
 
     if (!token) {
-      return NextResponse.error('cannot get notion token')
+      return NextResponse.error()
     }
 
     const res = NextResponse.next()

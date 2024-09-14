@@ -7,7 +7,7 @@ type Params = {
   shelfId: string
 }
 
-export async function GET(_, { params }: { params: Params }) {
+export async function GET(_: NextRequest, { params }: { params: Params }) {
   const books = await getBooks(params.shelfId)
   return NextResponse.json(books)
 }
