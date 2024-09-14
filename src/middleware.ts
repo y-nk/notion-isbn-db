@@ -1,0 +1,29 @@
+import { NextRequest, NextResponse } from 'next/server'
+
+import { getOauthUrl } from './lib/notion/getOAuthUrl'
+import { getAccessToken } from './lib/notion/getAccessToken'
+
+export default async function middleware(req: NextRequest) {
+  if (req.cookies.has('token')) return NextResponse.next()
+
+  const code = req.nextUrl.searchParams.get('code')
+
+  if (!code) {
+    return NextResponse.redirect(getOauthUrl())
+  } else {
+    const token = await getAccessToken(code)
+
+    if (!token) {
+      return NextResponse.error('cannot get notion token')
+    }
+
+    const res = NextResponse.next()
+    res.cookies.set('token', token)
+
+    return res
+  }
+}
+
+export const config = {
+  matcher: [`/`],
+}
